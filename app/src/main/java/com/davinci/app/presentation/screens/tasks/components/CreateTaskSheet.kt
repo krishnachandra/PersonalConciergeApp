@@ -4,9 +4,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.davinci.app.domain.model.TaskCategory
+import com.davinci.app.presentation.components.AvatarChip
 import com.davinci.app.presentation.theme.DavinciColors
 
 /**
@@ -110,6 +112,25 @@ fun CreateTaskSheet(
                         uncheckedTrackColor = DavinciColors.SurfaceVariant,
                     ),
                 )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Share section
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = "Share with",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = DavinciColors.TextPrimary,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    AvatarChip(initials = "NPS", size = 32.dp)
+                    AvatarChip(initials = "JPL", size = 32.dp)
+                }
             }
 
             Spacer(modifier = Modifier.height(24.dp))
