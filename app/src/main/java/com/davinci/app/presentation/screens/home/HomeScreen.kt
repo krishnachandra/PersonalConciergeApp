@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.outlined.LocationOn
 import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Thermostat
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -19,9 +20,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.material.icons.filled.Shield
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.davinci.app.presentation.screens.home.components.MarketPulseCard
 import com.davinci.app.presentation.screens.home.components.TimezoneWidget
@@ -35,6 +38,8 @@ import java.time.format.DateTimeFormatter
 fun HomeScreen(
     onNavigateToTasks: () -> Unit,
     onNavigateToInvestment: () -> Unit,
+    onNavigateToTimezone: () -> Unit,
+    onLogout: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
@@ -75,12 +80,21 @@ fun HomeScreen(
         ) {
             // Left Column: User & Location
             Column {
-                Text(
-                    text = "Hi NKC",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = DavinciColors.TextPrimary,
-                    fontWeight = FontWeight.Bold
-                )
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Hi NKC",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = DavinciColors.TextPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = Icons.Filled.Shield,
+                        contentDescription = "Admin Shield",
+                        tint = Color(0xFFFFD700), // Golden color
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.height(6.dp))
                 // Location Row
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -135,39 +149,63 @@ fun HomeScreen(
                 )
             }
 
-            // Right Column: Time & Date
-            Column(horizontalAlignment = Alignment.End) {
-                Text(
-                    text = formattedDay,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = DavinciColors.TextMuted,
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = formattedTime,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = DavinciColors.TextPrimary,
-                    fontWeight = FontWeight.Bold
-                )
-                Spacer(modifier = Modifier.height(2.dp))
-                Text(
-                    text = formattedDate,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = DavinciColors.TextMuted,
-                )
+            // Right Column: Time & Date & Menu
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Column(horizontalAlignment = Alignment.End) {
+                    Text(
+                        text = formattedDay,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = DavinciColors.TextMuted,
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = formattedTime,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = DavinciColors.TextPrimary,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = formattedDate,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = DavinciColors.TextMuted,
+                    )
+                }
+                
+                Spacer(modifier = Modifier.width(8.dp))
+                
+                Box {
+                    var menuExpanded by remember { mutableStateOf(false) }
+                    IconButton(onClick = { menuExpanded = true }) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "Options",
+                            tint = DavinciColors.TextPrimary
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        modifier = Modifier.background(DavinciColors.Surface)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("IST to EST", color = DavinciColors.TextPrimary) },
+                            onClick = {
+                                menuExpanded = false
+                                onNavigateToTimezone()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Logout", color = DavinciColors.TextPrimary) },
+                            onClick = {
+                                menuExpanded = false
+                                onLogout()
+                            }
+                        )
+                    }
+                }
             }
         }
-
-        HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
-
-        // ─── Timezone Widget ─────────────────────────────────────
-        TimezoneWidget(
-            estTime = "08:30 AM",
-            istTime = "07:00 PM",
-            overlapProgress = 0.7f,
-            remainingHours = 3,
-            modifier = Modifier.padding(24.dp)
-        )
 
         HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
 
