@@ -25,6 +25,8 @@ import java.time.format.DateTimeFormatter
 fun TaskRow(
     task: Task,
     onToggle: () -> Unit,
+    onEdit: () -> Unit = {},
+    onDelete: () -> Unit = {},
     isCompleted: Boolean = false,
     showCategory: Boolean = false,
     modifier: Modifier = Modifier,
@@ -138,6 +140,30 @@ fun TaskRow(
                     color = DavinciColors.Primary,
                     fontWeight = FontWeight.Medium
                 )
+                
+                Spacer(modifier = Modifier.width(8.dp))
+                IconButton(
+                    onClick = onEdit,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Edit,
+                        contentDescription = "Edit Task",
+                        modifier = Modifier.size(14.dp),
+                        tint = DavinciColors.TextMuted
+                    )
+                }
+                IconButton(
+                    onClick = onDelete,
+                    modifier = Modifier.size(24.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = "Delete Task",
+                        modifier = Modifier.size(14.dp),
+                        tint = DavinciColors.TextMuted
+                    )
+                }
             }
         }
 

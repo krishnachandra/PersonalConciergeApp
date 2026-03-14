@@ -42,6 +42,7 @@ class TaskRepositoryImpl @Inject constructor(
         dueDate: Instant?,
         isUrgent: Boolean,
         notes: String?,
+        sharedWith: List<String>,
     ): Result<Task> {
         return try {
             val task = Task(
@@ -54,6 +55,7 @@ class TaskRepositoryImpl @Inject constructor(
                 isUrgent = isUrgent,
                 dueDate = dueDate,
                 notes = notes,
+                sharedWith = sharedWith,
             )
             taskDao.insertTask(TaskEntity.fromDomain(task))
             // TODO: Sync to Supabase

@@ -99,6 +99,7 @@ class TasksViewModel @Inject constructor(
         assignee: String?,
         isUrgent: Boolean,
         dueDate: java.time.Instant? = null,
+        sharedWith: List<String> = emptyList(),
     ) {
         viewModelScope.launch {
             taskRepository.createTask(
@@ -107,7 +108,20 @@ class TasksViewModel @Inject constructor(
                 assignedTo = assignee,
                 isUrgent = isUrgent,
                 dueDate = dueDate,
+                sharedWith = sharedWith,
             )
+        }
+    }
+
+    fun updateTask(task: Task) {
+        viewModelScope.launch {
+            taskRepository.updateTask(task)
+        }
+    }
+
+    fun deleteTask(taskId: String) {
+        viewModelScope.launch {
+            taskRepository.deleteTask(taskId)
         }
     }
 }

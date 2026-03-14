@@ -25,6 +25,7 @@ interface TaskRepository {
         dueDate: java.time.Instant? = null,
         isUrgent: Boolean = false,
         notes: String? = null,
+        sharedWith: List<String> = emptyList(),
     ): Result<Task>
     suspend fun updateTask(task: Task): Result<Task>
     suspend fun toggleTaskStatus(taskId: String): Result<Task>

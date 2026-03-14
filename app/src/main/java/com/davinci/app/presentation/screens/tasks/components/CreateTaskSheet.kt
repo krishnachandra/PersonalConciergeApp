@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.davinci.app.domain.model.Task
 import com.davinci.app.domain.model.TaskCategory
 import com.davinci.app.presentation.components.AvatarChip
 import com.davinci.app.presentation.theme.DavinciColors
@@ -22,13 +23,14 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateTaskSheet(
+    initialTask: Task? = null,
     onDismiss: () -> Unit,
-    onCreateTask: (String, TaskCategory, String?, Boolean, java.time.Instant?) -> Unit,
+    onSaveTask: (String, TaskCategory, String?, Boolean, java.time.Instant?, Set<String>) -> Unit,
 ) {
-    var title by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf(TaskCategory.PERSONAL) }
-    var isUrgent by remember { mutableStateOf(true) }
-    var selectedUsers by remember { mutableStateOf(setOf<String>()) }
+    var title by remember { mutableStateOf(initialTask?.title ?: "") }
+    var selectedCategory by remember { mutableStateOf(initialTask?.category ?: TaskCategory.PERSONAL) }
+    var isUrgent by remember { mutableStateOf(initialTask?.isUrgent ?: true) }
+    var selectedUsers by remember { mutableStateOf(initialTask?.sharedWith?.toSet() ?: setOf<String>()) }
     
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
@@ -49,7 +51,7 @@ fun CreateTaskSheet(
                 .padding(bottom = 32.dp),
         ) {
             Text(
-                text = "New Task",
+                text = if (initialTask == null) "New Task" else "Edit Task",
                 style = MaterialTheme.typography.headlineMedium,
                 color = DavinciColors.TextPrimary,
             )
@@ -192,9 +194,9 @@ fun CreateTaskSheet(
                 onClick = {
                     if (title.isNotBlank()) {
                         val dueDate = if (!isUrgent) {
-                            datePickerState.selectedDateMillis?.let { java.time.Instant.ofEpochMilli(it) }
+                            datePickerState.selectedDateMillis?.let { java.time.Instant.ofEpochMilli(it) } ?: initialTask?.dueDate
                         } else null
-                        onCreateTask(title, selectedCategory, null, isUrgent, dueDate)
+                        onSaveTask(title, selectedCategory, initialTask?.assignedTo, isUrgent, dueDate, selectedUsers)
                     }
                 },
                 modifier = Modifier
@@ -207,7 +209,7 @@ fun CreateTaskSheet(
                 ),
                 enabled = title.isNotBlank(),
             ) {
-                Text("Create Task", style = MaterialTheme.typography.labelLarge)
+                Text(if (initialTask == null) "Create Task" else "Save Changes", style = MaterialTheme.typography.labelLarge)
             }
         }
     }

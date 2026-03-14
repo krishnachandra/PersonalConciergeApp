@@ -39,6 +39,9 @@ fun TasksScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var showCreateSheet by remember { mutableStateOf(false) }
+    var showSortMenu by remember { mutableStateOf(false) }
+    var taskToEdit by remember { mutableStateOf<com.davinci.app.domain.model.Task?>(null) }
+    var taskToDelete by remember { mutableStateOf<com.davinci.app.domain.model.Task?>(null) }
 
     Box(modifier = Modifier.fillMaxSize().background(DavinciColors.Background)) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -118,6 +121,8 @@ fun TasksScreen(
                     TaskRow(
                         task = task,
                         onToggle = { viewModel.toggleTask(task.id) },
+                        onEdit = { taskToEdit = task },
+                        onDelete = { taskToDelete = task },
                         showCategory = uiState.selectedCategory == "All",
                         modifier = Modifier.animateItem(),
                     )
@@ -167,6 +172,8 @@ fun TasksScreen(
                         TaskRow(
                             task = task,
                             onToggle = { viewModel.toggleTask(task.id) },
+                            onEdit = { taskToEdit = task },
+                            onDelete = { taskToDelete = task },
                             isCompleted = true,
                             showCategory = uiState.selectedCategory == "All",
                             modifier = Modifier.animateItem(),
@@ -195,14 +202,59 @@ fun TasksScreen(
         }
     }
 
-    // ─── Create Task Bottom Sheet ────────────────────────
-    if (showCreateSheet) {
+    // ─── Create/Edit Task Bottom Sheet ───────────────────
+    if (showCreateSheet || taskToEdit != null) {
         CreateTaskSheet(
-            onDismiss = { showCreateSheet = false },
-            onCreateTask = { title, category, assignee, isUrgent, dueDate ->
-                viewModel.createTask(title, category, assignee, isUrgent, dueDate)
-                showCreateSheet = false
+            initialTask = taskToEdit,
+            onDismiss = { 
+                showCreateSheet = false 
+                taskToEdit = null
             },
+            onSaveTask = { title, category, assignee, isUrgent, dueDate, sharedWith ->
+                if (taskToEdit != null) {
+                    viewModel.updateTask(taskToEdit!!.copy(
+                        title = title,
+                        category = category,
+                        assignedTo = assignee,
+                        isUrgent = isUrgent,
+                        dueDate = dueDate,
+                        sharedWith = sharedWith.toList()
+                    ))
+                } else {
+                    viewModel.createTask(title, category, assignee, isUrgent, dueDate, sharedWith.toList())
+                }
+                showCreateSheet = false
+                taskToEdit = null
+            },
+        )
+    }
+
+    // ─── Delete Confirmation Dialog ──────────────────────
+    if (taskToDelete != null) {
+        AlertDialog(
+            onDismissRequest = { taskToDelete = null },
+            title = {
+                Text(text = "Delete Task", color = DavinciColors.TextPrimary)
+            },
+            text = {
+                Text(text = "Are you sure you want to delete this task? This action cannot be undone.", color = DavinciColors.TextMuted)
+            },
+            containerColor = DavinciColors.Surface,
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteTask(taskToDelete!!.id)
+                        taskToDelete = null
+                    }
+                ) {
+                    Text("Delete", color = DavinciColors.Negative)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { taskToDelete = null }) {
+                    Text("Cancel", color = DavinciColors.TextMuted)
+                }
+            }
         )
     }
 }
