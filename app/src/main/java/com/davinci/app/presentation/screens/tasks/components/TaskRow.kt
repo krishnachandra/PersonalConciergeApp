@@ -78,17 +78,16 @@ fun TaskRow(
             Spacer(modifier = Modifier.height(2.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (task.isUrgent && !isCompleted) {
-                    Text(
-                        text = "⚠ ",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = DavinciColors.Warning,
+                    Icon(
+                        imageVector = Icons.Outlined.WarningAmber,
+                        contentDescription = "Urgent",
+                        tint = DavinciColors.Warning,
+                        modifier = Modifier.size(14.dp)
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
                 }
                 Text(
                     text = buildString {
-                        if (task.category != com.davinci.app.domain.model.TaskCategory.PERSONAL) {
-                            append("${task.category.label} • ")
-                        }
                         append(createdDate)
                         if (task.isUrgent && !isCompleted) append(" • Urgent")
                     },
@@ -97,7 +96,7 @@ fun TaskRow(
                 )
             }
 
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
@@ -113,34 +112,32 @@ fun TaskRow(
                     task.sharedWith.forEach { initials ->
                         AvatarChip(initials = initials, size = 20.dp)
                     }
-                }
 
-                if (showCategory && task.category != com.davinci.app.domain.model.TaskCategory.PERSONAL) {
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Spacer(modifier = Modifier.width(2.dp))
                     Text(
                         text = "•",
                         style = MaterialTheme.typography.bodySmall,
                         color = DavinciColors.TextMuted
                     )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = when (task.category) {
-                            com.davinci.app.domain.model.TaskCategory.PERSONAL -> Icons.Outlined.Person
-                            com.davinci.app.domain.model.TaskCategory.PURCHASES -> Icons.Outlined.ShoppingCart
-                            com.davinci.app.domain.model.TaskCategory.FINANCES -> Icons.Outlined.Payments
-                        },
-                        contentDescription = null,
-                        modifier = Modifier.size(14.dp),
-                        tint = DavinciColors.Primary
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text(
-                        text = task.category.label,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = DavinciColors.Primary,
-                        fontWeight = FontWeight.Medium
-                    )
+                    Spacer(modifier = Modifier.width(2.dp))
                 }
+
+                Icon(
+                    imageVector = when (task.category) {
+                        com.davinci.app.domain.model.TaskCategory.PERSONAL -> Icons.Outlined.Person
+                        com.davinci.app.domain.model.TaskCategory.PURCHASES -> Icons.Outlined.ShoppingCart
+                        com.davinci.app.domain.model.TaskCategory.FINANCES -> Icons.Outlined.Payments
+                    },
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                    tint = DavinciColors.Primary
+                )
+                Text(
+                    text = task.category.label,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = DavinciColors.Primary,
+                    fontWeight = FontWeight.Medium
+                )
             }
         }
 
