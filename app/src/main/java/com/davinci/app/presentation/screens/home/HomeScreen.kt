@@ -9,6 +9,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -18,6 +23,9 @@ import com.davinci.app.presentation.screens.home.components.MarketPulseCard
 import com.davinci.app.presentation.screens.home.components.TimezoneWidget
 import com.davinci.app.presentation.screens.home.components.UrgentTasksSection
 import com.davinci.app.presentation.theme.DavinciColors
+import kotlinx.coroutines.delay
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomeScreen(
@@ -26,6 +34,21 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val scrollState = rememberScrollState()
+
+    var currentTime by remember { mutableStateOf(ZonedDateTime.now()) }
+    
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1000)
+            currentTime = ZonedDateTime.now()
+        }
+    }
+
+    val dateFormatter = remember { DateTimeFormatter.ofPattern("MMM dd yyyy") }
+    val timeFormatter = remember { DateTimeFormatter.ofPattern("hh:mm a") }
+
+    val formattedDate = currentTime.format(dateFormatter)
+    val formattedTime = currentTime.format(timeFormatter)
 
     Column(
         modifier = Modifier
@@ -41,17 +64,44 @@ fun HomeScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = "Today",
-                style = MaterialTheme.typography.headlineMedium,
-                color = DavinciColors.TextPrimary,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Oct 24", // Hardcoded per design
-                style = MaterialTheme.typography.titleMedium,
-                color = DavinciColors.TextMuted,
-            )
+            // Left Column: User & Location
+            Column {
+                Text(
+                    text = "Hi NKC",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = DavinciColors.TextPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        text = "Jubilee Hills, Hyderabad",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = DavinciColors.TextMuted,
+                    )
+                    Text(
+                        text = " • 32°C • AQI 42",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = DavinciColors.TextMuted,
+                    )
+                }
+            }
+
+            // Right Column: Time & Date
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = formattedTime,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = DavinciColors.TextPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = formattedDate,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = DavinciColors.TextMuted,
+                )
+            }
         }
 
         HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
