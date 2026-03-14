@@ -7,6 +7,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.LocationOn
+import androidx.compose.material.icons.outlined.Refresh
+import androidx.compose.material.icons.outlined.Thermostat
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -44,9 +47,11 @@ fun HomeScreen(
         }
     }
 
+    val dayFormatter = remember { DateTimeFormatter.ofPattern("EEEE") }
     val dateFormatter = remember { DateTimeFormatter.ofPattern("MMM dd yyyy") }
     val timeFormatter = remember { DateTimeFormatter.ofPattern("hh:mm a") }
 
+    val formattedDay = currentTime.format(dayFormatter)
     val formattedDate = currentTime.format(dateFormatter)
     val formattedTime = currentTime.format(timeFormatter)
 
@@ -72,15 +77,46 @@ fun HomeScreen(
                     color = DavinciColors.TextPrimary,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(6.dp))
+                // Location Row
                 Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.LocationOn,
+                        contentDescription = "Location",
+                        modifier = Modifier.size(16.dp),
+                        tint = DavinciColors.TextMuted
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
                         text = "Jubilee Hills, Hyderabad",
                         style = MaterialTheme.typography.bodyMedium,
                         color = DavinciColors.TextMuted,
                     )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    IconButton(
+                        onClick = { /* Refresh location/weather */ },
+                        modifier = Modifier.size(24.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Refresh,
+                            contentDescription = "Refresh location",
+                            modifier = Modifier.size(16.dp),
+                            tint = DavinciColors.TextMuted
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(2.dp))
+                // Weather Row
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = Icons.Outlined.Thermostat,
+                        contentDescription = "Temperature",
+                        modifier = Modifier.size(16.dp),
+                        tint = DavinciColors.TextMuted
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = " • 32°C • AQI 42",
+                        text = "32°C • AQI 42",
                         style = MaterialTheme.typography.bodyMedium,
                         color = DavinciColors.TextMuted,
                     )
@@ -90,12 +126,18 @@ fun HomeScreen(
             // Right Column: Time & Date
             Column(horizontalAlignment = Alignment.End) {
                 Text(
+                    text = formattedDay,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = DavinciColors.TextMuted,
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
                     text = formattedTime,
                     style = MaterialTheme.typography.titleMedium,
                     color = DavinciColors.TextPrimary,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(2.dp))
                 Text(
                     text = formattedDate,
                     style = MaterialTheme.typography.bodyMedium,
