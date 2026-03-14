@@ -19,6 +19,12 @@ import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material.icons.outlined.Thermostat
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.drawscope.rotate
+import androidx.compose.ui.geometry.Size
+import androidx.compose.foundation.Canvas
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.material.icons.outlined.Article
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -371,6 +377,13 @@ fun HomeScreen(
                 CategoryTile("Finance", Icons.Outlined.Payments, Modifier.weight(1f), hasNotification = true)
                 CategoryTile("Milestones", Icons.Outlined.Flag, Modifier.weight(1f))
             }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                CategoryTile("News", Icons.Outlined.Article, Modifier.weight(1f))
+                AtomLogoTile(Modifier.weight(1f))
+            }
         }
         
         // ─── Completed Tasks Header ─────────────────────────────────
@@ -441,5 +454,62 @@ private fun CategoryTile(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun AtomLogoTile(modifier: Modifier = Modifier) {
+    Surface(
+        onClick = { /* TODO */ },
+        modifier = modifier.height(110.dp),
+        shape = RoundedCornerShape(8.dp),
+        color = DavinciColors.Primary,
+        tonalElevation = 4.dp
+    ) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            AtomLogo(
+                modifier = Modifier.size(52.dp),
+                color = Color.White
+            )
+        }
+    }
+}
+
+@Composable
+fun AtomLogo(modifier: Modifier = Modifier, color: Color = Color.White) {
+    Canvas(modifier = modifier) {
+        val strokeWidth = 1.5.dp.toPx()
+        val center = Offset(size.width / 2, size.height / 2)
+        
+        // Draw 3 rotated ellipses for orbits
+        for (i in 0 until 3) {
+            rotate(degrees = i * 60f, pivot = center) {
+                drawOval(
+                    color = color.copy(alpha = 0.8f),
+                    topLeft = Offset(0f, size.height * 0.25f),
+                    size = Size(size.width, size.height * 0.5f),
+                    style = Stroke(width = strokeWidth)
+                )
+                
+                // Draw an electron on each orbit
+                rotate(degrees = 45f + (i * 30f), pivot = center) {
+                    drawCircle(
+                        color = color,
+                        radius = 2.5.dp.toPx(),
+                        center = Offset(size.width, size.height / 2)
+                    )
+                }
+            }
+        }
+        
+        // Draw nucleus
+        drawCircle(
+            color = color,
+            radius = 5.dp.toPx(),
+            center = center
+        )
     }
 }
