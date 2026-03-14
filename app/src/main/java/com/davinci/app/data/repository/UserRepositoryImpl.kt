@@ -3,6 +3,7 @@ package com.davinci.app.data.repository
 import com.davinci.app.data.remote.SupabaseClientProvider
 import com.davinci.app.domain.model.*
 import com.davinci.app.domain.repository.UserRepository
+import io.github.jan.supabase.gotrue.auth
 import javax.inject.Inject
 import javax.inject.Singleton
 
