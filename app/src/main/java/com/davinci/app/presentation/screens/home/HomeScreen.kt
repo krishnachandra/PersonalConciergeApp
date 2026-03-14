@@ -71,31 +71,79 @@ fun HomeScreen(
             .verticalScroll(scrollState)
     ) {
         // ─── Top Header ──────────────────────────────────────────
-        Row(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp, vertical = 24.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+                .padding(24.dp)
         ) {
-            // Left Column: User & Location
-            Column {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        text = "Hi NKC",
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = DavinciColors.TextPrimary,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Icon(
-                        imageVector = Icons.Filled.Shield,
-                        contentDescription = "Admin Shield",
-                        tint = Color(0xFFFFD700), // Golden color
-                        modifier = Modifier.size(24.dp)
-                    )
+            // Menu row at the top right
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                // Menu Box
+                Box {
+                    var menuExpanded by remember { mutableStateOf(false) }
+                    IconButton(
+                        onClick = { menuExpanded = true },
+                        modifier = Modifier.offset(x = 12.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "Options",
+                            tint = DavinciColors.TextPrimary
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        modifier = Modifier.background(DavinciColors.Surface)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("IST to EST", color = DavinciColors.TextPrimary) },
+                            onClick = {
+                                menuExpanded = false
+                                onNavigateToTimezone()
+                            }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Logout", color = DavinciColors.TextPrimary) },
+                            onClick = {
+                                menuExpanded = false
+                                onLogout()
+                            }
+                        )
+                    }
                 }
-                Spacer(modifier = Modifier.height(6.dp))
+            }
+
+            // Next Line: Greeting and Shield
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = "Hi! NKC",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = DavinciColors.TextPrimary,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Icon(
+                    imageVector = Icons.Filled.Shield,
+                    contentDescription = "Admin Shield",
+                    tint = Color(0xFFFFD700), // Golden color
+                    modifier = Modifier.size(24.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(6.dp))
+
+            // Second Row: Location/Weather & Time/Date
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.Bottom
+            ) {
+                // Left Column: User & Location
+                Column {
                 // Location Row
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -147,65 +195,45 @@ fun HomeScreen(
                     color = DavinciColors.TextMuted,
                     fontStyle = FontStyle.Italic
                 )
-            }
+                } // end left Column
 
-            // Right Column: Time & Date & Menu
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(horizontalAlignment = Alignment.End) {
-                    Text(
-                        text = formattedDay,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = DavinciColors.TextMuted,
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
+            // Right Column: Time & Date
+            Column(horizontalAlignment = Alignment.End) {
+                Text(
+                    text = formattedDay,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = DavinciColors.TextMuted,
+                )
+                Spacer(modifier = Modifier.height(2.dp))
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
                         text = formattedTime,
                         style = MaterialTheme.typography.titleMedium,
                         color = DavinciColors.TextPrimary,
                         fontWeight = FontWeight.Bold
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = formattedDate,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = DavinciColors.TextMuted,
-                    )
-                }
-                
-                Spacer(modifier = Modifier.width(8.dp))
-                
-                Box {
-                    var menuExpanded by remember { mutableStateOf(false) }
-                    IconButton(onClick = { menuExpanded = true }) {
-                        Icon(
-                            imageVector = Icons.Default.MoreVert,
-                            contentDescription = "Options",
-                            tint = DavinciColors.TextPrimary
-                        )
-                    }
-                    DropdownMenu(
-                        expanded = menuExpanded,
-                        onDismissRequest = { menuExpanded = false },
-                        modifier = Modifier.background(DavinciColors.Surface)
+                    Spacer(modifier = Modifier.width(4.dp))
+                    IconButton(
+                        onClick = { lastUpdatedTime = ZonedDateTime.now() },
+                        modifier = Modifier.size(24.dp)
                     ) {
-                        DropdownMenuItem(
-                            text = { Text("IST to EST", color = DavinciColors.TextPrimary) },
-                            onClick = {
-                                menuExpanded = false
-                                onNavigateToTimezone()
-                            }
-                        )
-                        DropdownMenuItem(
-                            text = { Text("Logout", color = DavinciColors.TextPrimary) },
-                            onClick = {
-                                menuExpanded = false
-                                onLogout()
-                            }
+                        Icon(
+                            imageVector = Icons.Outlined.Refresh,
+                            contentDescription = "Refresh data",
+                            modifier = Modifier.size(16.dp),
+                            tint = DavinciColors.Primary
                         )
                     }
                 }
-            }
-        }
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = formattedDate,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = DavinciColors.TextMuted,
+                )
+            }   // end right Column
+        }       // end location/time Row
+        }       // end header Column
 
         HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
 
