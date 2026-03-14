@@ -49,12 +49,33 @@ fun InvestmentScreen(
                 style = MaterialTheme.typography.displayMedium,
                 color = DavinciColors.TextPrimary,
             )
-            IconButton(onClick = { /* TODO: overflow menu */ }) {
-                Icon(
-                    imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "More",
-                    tint = DavinciColors.TextPrimary,
-                )
+            Box {
+                var menuExpanded by remember { mutableStateOf(false) }
+                IconButton(onClick = { menuExpanded = true }) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = "More",
+                        tint = DavinciColors.TextPrimary,
+                    )
+                }
+                DropdownMenu(
+                    expanded = menuExpanded,
+                    onDismissRequest = { menuExpanded = false },
+                    modifier = Modifier.background(DavinciColors.Surface)
+                ) {
+                    DropdownMenuItem(
+                        text = { Text("Refresh Data", color = DavinciColors.TextPrimary) },
+                        onClick = { menuExpanded = false }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Asset Details", color = DavinciColors.TextPrimary) },
+                        onClick = { menuExpanded = false }
+                    )
+                    DropdownMenuItem(
+                        text = { Text("Export Report", color = DavinciColors.TextPrimary) },
+                        onClick = { menuExpanded = false }
+                    )
+                }
             }
         }
 

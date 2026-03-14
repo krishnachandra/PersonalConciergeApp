@@ -49,6 +49,7 @@ class TaskRepositoryImpl @Inject constructor(
                 title = title,
                 category = category,
                 assignedTo = assignedTo,
+                assignedToName = if (assignedTo == null) "NKC" else null,
                 createdBy = "current-user", // TODO: get from auth
                 isUrgent = isUrgent,
                 dueDate = dueDate,

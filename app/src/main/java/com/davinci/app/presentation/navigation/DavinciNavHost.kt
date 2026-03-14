@@ -15,6 +15,7 @@ import com.davinci.app.presentation.screens.home.HomeScreen
 import com.davinci.app.presentation.screens.investment.InvestmentScreen
 import com.davinci.app.presentation.screens.settings.SettingsScreen
 import com.davinci.app.presentation.screens.tasks.TasksScreen
+import com.davinci.app.presentation.screens.timezone.TimezoneScreen
 
 @Composable
 fun DavinciNavHost(
@@ -67,6 +68,14 @@ fun DavinciNavHost(
                 onNavigateToInvestment = {
                     navController.navigate(Screen.Investment.route)
                 },
+                onNavigateToTimezone = {
+                    navController.navigate(Screen.Timezone.route)
+                },
+                onLogout = {
+                    navController.navigate(Screen.Login.route) {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
 
@@ -85,6 +94,12 @@ fun DavinciNavHost(
                         popUpTo(0) { inclusive = true }
                     }
                 },
+            )
+        }
+
+        composable(Screen.Timezone.route) {
+            TimezoneScreen(
+                onNavigateBack = { navController.popBackStack() }
             )
         }
     }

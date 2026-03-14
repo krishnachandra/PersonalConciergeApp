@@ -23,7 +23,7 @@ fun UrgentTasksSection(modifier: Modifier = Modifier) {
             title = "Approve Q4 Budget Transfer",
             subtitle = "Due in 2 hrs",
             subtitleColor = DavinciColors.Error,
-            avatarImage = true // Simulating a real picture using primary gradient 
+            avatarInitials = "NKC"
         )
         HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
         UrgentTaskRow(
@@ -37,7 +37,7 @@ fun UrgentTasksSection(modifier: Modifier = Modifier) {
             title = "Review Mom's Visa Application",
             subtitle = "Admin",
             subtitleColor = DavinciColors.TextMuted,
-            avatarImage = true
+            avatarInitials = "NKC"
         )
         HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
     }

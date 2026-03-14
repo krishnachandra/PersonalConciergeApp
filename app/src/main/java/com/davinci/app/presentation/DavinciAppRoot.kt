@@ -24,7 +24,7 @@ fun DavinciAppRoot() {
     val showBottomNav = currentRoute in Screen.bottomNavItems.map { it.route } || currentRoute == Screen.Timezone.route
 
     // TODO: Check auth state to determine start destination
-    val startDestination = Screen.Login.route
+    val startDestination = Screen.Tasks.route
 
     Scaffold(
         bottomBar = {

@@ -1,8 +1,11 @@
 package com.davinci.app.presentation.screens.tasks.components
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Visibility
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -11,6 +14,8 @@ import androidx.compose.ui.unit.dp
 import com.davinci.app.domain.model.Task
 import com.davinci.app.presentation.components.AvatarChip
 import com.davinci.app.presentation.theme.DavinciColors
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 /**
  * Single task row — checkbox, title, category, urgent badge, avatar.
@@ -23,6 +28,11 @@ fun TaskRow(
     isCompleted: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
+    val dateFormatter = remember { 
+        DateTimeFormatter.ofPattern("dd-MMM-yyyy").withZone(ZoneId.systemDefault()) 
+    }
+    val createdDate = dateFormatter.format(task.createdAt)
+
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -76,10 +86,27 @@ fun TaskRow(
                 Text(
                     text = buildString {
                         append(task.category.label)
+                        append(" • $createdDate")
                         if (task.isUrgent && !isCompleted) append(" • Urgent")
                     },
                     style = MaterialTheme.typography.bodySmall,
                     color = if (isCompleted) DavinciColors.Completed else DavinciColors.TextMuted,
+                )
+            }
+
+            Spacer(modifier = Modifier.height(2.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = Icons.Outlined.Visibility,
+                    contentDescription = null,
+                    modifier = Modifier.size(14.dp),
+                    tint = DavinciColors.TextMuted
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "Shared with: NPS & JPL",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = DavinciColors.TextMuted
                 )
             }
         }
@@ -87,7 +114,7 @@ fun TaskRow(
         // Avatar
         AvatarChip(
             imageUrl = task.assignedToAvatar,
-            initials = task.assignedToName?.take(2) ?: "?",
+            initials = task.assignedToName?.take(3) ?: "NKC",
             size = 32.dp,
         )
     }

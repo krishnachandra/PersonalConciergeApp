@@ -34,4 +34,13 @@ object DavinciColors {
     val Overlay         = Color(0x40000000)   // Scrim for bottom sheets
     val Completed       = Color(0xFF9CA3AF)   // Completed task text (struck through)
     val CompletedCheck  = Color(0xFF60A5FA)   // Blue checkmark for completed items
+
+    // ─── Smiley / Emoji Colors ──────────────────────────────
+    val EmojiRed        = Color(0xFFEF4444)   // For Location Pin & Thermometer liquid
+    val EmojiSilver     = Color(0xFFCBD5E1)   // For Thermometer frame
+
+    // ─── AQI Colors ─────────────────────────────────────────
+    val AQI_Good        = Color(0xFF22C55E)   // Green
+    val AQI_Moderate    = Color(0xFFEAB308)   // Yellow/Gold
+    val AQI_Unhealthy   = Color(0xFFEF4444)   // Red
 }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -37,12 +38,48 @@ fun TasksScreen(
     Box(modifier = Modifier.fillMaxSize().background(DavinciColors.Background)) {
         Column(modifier = Modifier.fillMaxSize()) {
             // ─── Header ──────────────────────────────────
-            Text(
-                text = "Shared Tasks",
-                style = MaterialTheme.typography.displayMedium,
-                color = DavinciColors.TextPrimary,
-                modifier = Modifier.padding(start = 24.dp, top = 24.dp, bottom = 16.dp),
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 24.dp, top = 24.dp, end = 12.dp, bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Shared Tasks",
+                    style = MaterialTheme.typography.displayMedium,
+                    color = DavinciColors.TextPrimary,
+                )
+                
+                Box {
+                    var menuExpanded by remember { mutableStateOf(false) }
+                    IconButton(onClick = { menuExpanded = true }) {
+                        Icon(
+                            imageVector = Icons.Default.MoreVert,
+                            contentDescription = "Options",
+                            tint = DavinciColors.TextPrimary
+                        )
+                    }
+                    DropdownMenu(
+                        expanded = menuExpanded,
+                        onDismissRequest = { menuExpanded = false },
+                        modifier = Modifier.background(DavinciColors.Surface)
+                    ) {
+                        DropdownMenuItem(
+                            text = { Text("Refresh", color = DavinciColors.TextPrimary) },
+                            onClick = { menuExpanded = false }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Mark All Done", color = DavinciColors.TextPrimary) },
+                            onClick = { menuExpanded = false }
+                        )
+                        DropdownMenuItem(
+                            text = { Text("Clear Completed", color = DavinciColors.TextPrimary) },
+                            onClick = { menuExpanded = false }
+                        )
+                    }
+                }
+            }
 
             // ─── Category Tabs ───────────────────────────
             CategoryTabs(

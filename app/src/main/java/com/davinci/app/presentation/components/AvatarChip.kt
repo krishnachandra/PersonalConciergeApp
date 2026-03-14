@@ -45,7 +45,7 @@ fun AvatarChip(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = initials.take(2).uppercase(),
+                text = initials.take(3).uppercase(),
                 style = MaterialTheme.typography.labelMedium,
                 color = DavinciColors.Primary,
             )

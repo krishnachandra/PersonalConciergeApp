@@ -13,9 +13,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class SettingsUiState(
-    val displayName: String = "User",
-    val email: String = "user@email.com",
-    val initials: String = "U",
+    val displayName: String = "NKC",
+    val email: String = "nkc@davinci.app",
+    val initials: String = "NKC",
     val avatarUrl: String? = null,
     val biometricEnabled: Boolean = false,
 )
@@ -44,7 +44,7 @@ class SettingsViewModel @Inject constructor(
                             initials = profile.displayName
                                 .split(" ")
                                 .mapNotNull { part -> part.firstOrNull()?.uppercase() }
-                                .take(2)
+                                .take(3)
                                 .joinToString(""),
                             avatarUrl = profile.avatarUrl,
                         )

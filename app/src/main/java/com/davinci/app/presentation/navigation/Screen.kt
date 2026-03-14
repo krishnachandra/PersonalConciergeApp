@@ -57,6 +57,13 @@ sealed class Screen(
         selectedIcon = Icons.Filled.Dashboard,
     )
 
+    data object Timezone : Screen(
+        route = "timezone",
+        label = "Timezone",
+        icon = Icons.Outlined.Dashboard,
+        selectedIcon = Icons.Filled.Dashboard,
+    )
+
     companion object {
         val bottomNavItems = listOf(Home, Tasks, Investment, Settings)
     }
