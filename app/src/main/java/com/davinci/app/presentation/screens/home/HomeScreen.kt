@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,6 +40,7 @@ fun HomeScreen(
     val scrollState = rememberScrollState()
 
     var currentTime by remember { mutableStateOf(ZonedDateTime.now()) }
+    var lastUpdatedTime by remember { mutableStateOf(ZonedDateTime.now()) }
     
     LaunchedEffect(Unit) {
         while (true) {
@@ -54,6 +56,8 @@ fun HomeScreen(
     val formattedDay = currentTime.format(dayFormatter)
     val formattedDate = currentTime.format(dateFormatter)
     val formattedTime = currentTime.format(timeFormatter)
+
+    val lastUpdatedString = "last updated on ${lastUpdatedTime.format(dateFormatter)} ${lastUpdatedTime.format(timeFormatter)}"
 
     Column(
         modifier = Modifier
@@ -94,7 +98,7 @@ fun HomeScreen(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     IconButton(
-                        onClick = { /* Refresh location/weather */ },
+                        onClick = { lastUpdatedTime = ZonedDateTime.now() },
                         modifier = Modifier.size(24.dp)
                     ) {
                         Icon(
@@ -121,6 +125,14 @@ fun HomeScreen(
                         color = DavinciColors.TextMuted,
                     )
                 }
+                Spacer(modifier = Modifier.height(2.dp))
+                // Last Updated
+                Text(
+                    text = lastUpdatedString,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = DavinciColors.TextMuted,
+                    fontStyle = FontStyle.Italic
+                )
             }
 
             // Right Column: Time & Date
