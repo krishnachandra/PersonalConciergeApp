@@ -35,7 +35,7 @@ fun UrgentTasksSection(modifier: Modifier = Modifier) {
         HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
         UrgentTaskRow(
             title = "Review Mom's Visa Application",
-            subtitle = "Personal",
+            subtitle = "",
             subtitleColor = DavinciColors.TextMuted,
             avatarInitials = "NKC"
         )

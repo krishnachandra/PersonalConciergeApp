@@ -86,8 +86,10 @@ fun TaskRow(
                 }
                 Text(
                     text = buildString {
-                        append(task.category.label)
-                        append(" • $createdDate")
+                        if (task.category != com.davinci.app.domain.model.TaskCategory.PERSONAL) {
+                            append("${task.category.label} • ")
+                        }
+                        append(createdDate)
                         if (task.isUrgent && !isCompleted) append(" • Urgent")
                     },
                     style = MaterialTheme.typography.bodySmall,
@@ -113,7 +115,7 @@ fun TaskRow(
                     }
                 }
 
-                if (showCategory) {
+                if (showCategory && task.category != com.davinci.app.domain.model.TaskCategory.PERSONAL) {
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         text = "•",
