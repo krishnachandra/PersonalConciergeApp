@@ -145,7 +145,7 @@ fun LoginScreen(
             ),
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         // ─── Remember Me ───────────────────────────────
         Row(
@@ -162,7 +162,7 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = "Remember me",
+                text = "Remember Me",
                 style = MaterialTheme.typography.bodyMedium,
                 color = DavinciColors.TextPrimary,
             )
