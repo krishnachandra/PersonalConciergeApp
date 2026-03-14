@@ -149,7 +149,7 @@ fun LoginScreen(
 
         // ─── Remember Me ───────────────────────────────
         Row(
-            modifier = Modifier.fillMaxWidth().offset(x = (-12).dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
@@ -160,7 +160,7 @@ fun LoginScreen(
                     checkmarkColor = DavinciColors.TextOnPrimary
                 )
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
                 text = "Remember me",
                 style = MaterialTheme.typography.bodyMedium,
