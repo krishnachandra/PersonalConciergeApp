@@ -21,8 +21,7 @@ fun DavinciAppRoot() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
-    // Hide bottom nav on auth screens
-    val showBottomNav = currentRoute in Screen.bottomNavItems.map { it.route }
+    val showBottomNav = currentRoute in Screen.bottomNavItems.map { it.route } || currentRoute == Screen.Timezone.route
 
     // TODO: Check auth state to determine start destination
     val startDestination = Screen.Login.route
