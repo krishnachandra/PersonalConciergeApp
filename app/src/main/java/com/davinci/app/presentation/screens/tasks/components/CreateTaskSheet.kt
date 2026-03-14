@@ -1,5 +1,6 @@
 package com.davinci.app.presentation.screens.tasks.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -24,6 +25,7 @@ fun CreateTaskSheet(
     var title by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(TaskCategory.PERSONAL) }
     var isUrgent by remember { mutableStateOf(false) }
+    var selectedUsers by remember { mutableStateOf(setOf<String>()) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -123,13 +125,26 @@ fun CreateTaskSheet(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
-                    text = "Share with",
+                    text = if (selectedUsers.isEmpty()) "Share with" else "Share with (${selectedUsers.size})",
                     style = MaterialTheme.typography.bodyLarge,
                     color = DavinciColors.TextPrimary,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    AvatarChip(initials = "NPS", size = 32.dp)
-                    AvatarChip(initials = "JPL", size = 32.dp)
+                    val users = listOf("NPS", "JPL")
+                    users.forEach { userId ->
+                        AvatarChip(
+                            initials = userId,
+                            size = 32.dp,
+                            isSelected = selectedUsers.contains(userId),
+                            modifier = Modifier.clickable {
+                                selectedUsers = if (selectedUsers.contains(userId)) {
+                                    selectedUsers - userId
+                                } else {
+                                    selectedUsers + userId
+                                }
+                            }
+                        )
+                    }
                 }
             }
 

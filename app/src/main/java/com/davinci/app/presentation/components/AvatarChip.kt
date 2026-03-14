@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -27,15 +28,20 @@ fun AvatarChip(
     imageUrl: String? = null,
     initials: String = "?",
     size: Dp = 36.dp,
+    isSelected: Boolean = true,
     modifier: Modifier = Modifier,
 ) {
+    val bgColor = if (isSelected) DavinciColors.Primary.copy(alpha = 0.15f) else DavinciColors.SurfaceVariant
+    val textColor = if (isSelected) DavinciColors.Primary else DavinciColors.TextMuted
+
     if (imageUrl != null) {
         AsyncImage(
             model = imageUrl,
             contentDescription = "Avatar",
             modifier = modifier
                 .size(size)
-                .clip(CircleShape),
+                .clip(CircleShape)
+                .then(if (!isSelected) Modifier.background(Color.Gray.copy(alpha = 0.5f)) else Modifier),
             contentScale = ContentScale.Crop,
         )
     } else {
@@ -43,7 +49,7 @@ fun AvatarChip(
             modifier = modifier
                 .size(size)
                 .clip(CircleShape)
-                .background(DavinciColors.Primary.copy(alpha = 0.15f)),
+                .background(bgColor),
             contentAlignment = Alignment.Center,
         ) {
             val fontSize = if (size <= 24.dp) 8.sp else 12.sp
@@ -53,7 +59,7 @@ fun AvatarChip(
                     fontSize = fontSize,
                     fontWeight = FontWeight.Bold
                 ),
-                color = DavinciColors.Primary,
+                color = textColor,
             )
         }
     }
