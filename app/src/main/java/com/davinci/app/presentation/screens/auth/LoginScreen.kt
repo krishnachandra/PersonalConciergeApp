@@ -149,7 +149,7 @@ fun LoginScreen(
 
         // ─── Remember Me ───────────────────────────────
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().offset(x = (-14).dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
@@ -158,14 +158,12 @@ fun LoginScreen(
                 colors = CheckboxDefaults.colors(
                     checkedColor = DavinciColors.Primary,
                     checkmarkColor = DavinciColors.TextOnPrimary
-                ),
-                modifier = Modifier.offset(x = (-12).dp)
+                )
             )
             Text(
                 text = "Remember me",
                 style = MaterialTheme.typography.bodyMedium,
                 color = DavinciColors.TextPrimary,
-                modifier = Modifier.offset(x = (-12).dp)
             )
         }
 
@@ -211,6 +209,63 @@ fun LoginScreen(
             }
         }
 
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // ─── Divider ─────────────────────────────────────
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            HorizontalDivider(
+                modifier = Modifier.weight(1f),
+                color = DavinciColors.Divider,
+            )
+            Text(
+                text = "  or  ",
+                style = MaterialTheme.typography.bodySmall,
+                color = DavinciColors.TextMuted,
+            )
+            HorizontalDivider(
+                modifier = Modifier.weight(1f),
+                color = DavinciColors.Divider,
+            )
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // ─── Google Sign In ──────────────────────────────
+        OutlinedButton(
+            onClick = { /* Disabled */ },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(4.dp),
+            enabled = false,
+        ) {
+            Text(
+                text = "Continue with Google",
+                style = MaterialTheme.typography.labelLarge,
+            )
+        }
+
         Spacer(modifier = Modifier.weight(1f))
+
+        // ─── Sign Up Link ────────────────────────────────
+        Row(
+            modifier = Modifier.padding(bottom = 32.dp),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                text = "Don't have an account? ",
+                style = MaterialTheme.typography.bodyMedium,
+                color = DavinciColors.TextMuted.copy(alpha = 0.5f),
+            )
+            Text(
+                text = "Sign up",
+                style = MaterialTheme.typography.bodyMedium,
+                color = DavinciColors.Primary.copy(alpha = 0.5f),
+                fontWeight = FontWeight.Medium,
+            )
+        }
     }
 }
