@@ -34,7 +34,7 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
 
-    var email by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
 
@@ -70,12 +70,12 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(72.dp))
 
-        // ─── Email Field ─────────────────────────────────
+        // ─── Username Field ─────────────────────────────────
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
+            value = username,
+            onValueChange = { username = it },
             placeholder = {
-                Text("Email", color = DavinciColors.TextMuted)
+                Text("Username", color = DavinciColors.TextMuted)
             },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
@@ -88,7 +88,7 @@ fun LoginScreen(
             ),
             singleLine = true,
             keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Email,
+                keyboardType = KeyboardType.Text,
                 imeAction = ImeAction.Next,
             ),
             keyboardActions = KeyboardActions(
@@ -140,10 +140,34 @@ fun LoginScreen(
             keyboardActions = KeyboardActions(
                 onDone = {
                     focusManager.clearFocus()
-                    viewModel.login(email, password)
+                    viewModel.login(username, password)
                 }
             ),
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // ─── Remember Me ───────────────────────────────
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Checkbox(
+                checked = true,
+                onCheckedChange = null,
+                colors = CheckboxDefaults.colors(
+                    checkedColor = DavinciColors.Primary,
+                    checkmarkColor = DavinciColors.TextOnPrimary
+                ),
+                modifier = Modifier.offset(x = (-12).dp)
+            )
+            Text(
+                text = "Remember me",
+                style = MaterialTheme.typography.bodyMedium,
+                color = DavinciColors.TextPrimary,
+                modifier = Modifier.offset(x = (-12).dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 
@@ -162,7 +186,7 @@ fun LoginScreen(
 
         // ─── Sign In Button ──────────────────────────────
         Button(
-            onClick = { viewModel.login(email, password) },
+            onClick = { viewModel.login(username, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(52.dp),
@@ -187,68 +211,6 @@ fun LoginScreen(
             }
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // ─── Divider ─────────────────────────────────────
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            HorizontalDivider(
-                modifier = Modifier.weight(1f),
-                color = DavinciColors.Divider,
-            )
-            Text(
-                text = "  or  ",
-                style = MaterialTheme.typography.bodySmall,
-                color = DavinciColors.TextMuted,
-            )
-            HorizontalDivider(
-                modifier = Modifier.weight(1f),
-                color = DavinciColors.Divider,
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // ─── Google Sign In ──────────────────────────────
-        OutlinedButton(
-            onClick = { viewModel.loginWithGoogle() },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(52.dp),
-            shape = RoundedCornerShape(4.dp),
-            colors = ButtonDefaults.outlinedButtonColors(
-                contentColor = DavinciColors.TextPrimary,
-            ),
-            border = ButtonDefaults.outlinedButtonBorder,
-        ) {
-            Text(
-                text = "Continue with Google",
-                style = MaterialTheme.typography.labelLarge,
-                color = DavinciColors.TextPrimary,
-            )
-        }
-
         Spacer(modifier = Modifier.weight(1f))
-
-        // ─── Sign Up Link ────────────────────────────────
-        Row(
-            modifier = Modifier.padding(bottom = 32.dp),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text = "Don't have an account? ",
-                style = MaterialTheme.typography.bodyMedium,
-                color = DavinciColors.TextMuted,
-            )
-            Text(
-                text = "Sign up",
-                style = MaterialTheme.typography.bodyMedium,
-                color = DavinciColors.Primary,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.clickable { onNavigateToSignUp() },
-            )
-        }
     }
 }
