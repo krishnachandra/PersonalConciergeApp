@@ -2,7 +2,7 @@ package com.davinci.app.presentation.screens.tasks.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Visibility
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -26,6 +26,7 @@ fun TaskRow(
     task: Task,
     onToggle: () -> Unit,
     isCompleted: Boolean = false,
+    showCategory: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     val dateFormatter = remember { 
@@ -95,19 +96,46 @@ fun TaskRow(
             }
 
             Spacer(modifier = Modifier.height(2.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(6.dp)
+            ) {
                 Icon(
                     imageVector = Icons.Outlined.Visibility,
                     contentDescription = null,
                     modifier = Modifier.size(14.dp),
                     tint = DavinciColors.TextMuted
                 )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Shared with: NPS & JPL",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = DavinciColors.TextMuted
-                )
+                
+                AvatarChip(initials = "NPS", size = 20.dp)
+                AvatarChip(initials = "JPL", size = 20.dp)
+
+                if (showCategory) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = "•",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = DavinciColors.TextMuted
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(
+                        imageVector = when (task.category) {
+                            com.davinci.app.domain.model.TaskCategory.PERSONAL -> Icons.Outlined.Person
+                            com.davinci.app.domain.model.TaskCategory.PURCHASES -> Icons.Outlined.ShoppingCart
+                            com.davinci.app.domain.model.TaskCategory.FINANCES -> Icons.Outlined.Payments
+                        },
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = DavinciColors.Primary
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+                    Text(
+                        text = task.category.label,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = DavinciColors.Primary,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
         }
 

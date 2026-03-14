@@ -20,7 +20,7 @@ fun CreateTaskSheet(
     onCreateTask: (String, TaskCategory, String?, Boolean) -> Unit,
 ) {
     var title by remember { mutableStateOf("") }
-    var selectedCategory by remember { mutableStateOf(TaskCategory.ADMIN) }
+    var selectedCategory by remember { mutableStateOf(TaskCategory.PERSONAL) }
     var isUrgent by remember { mutableStateOf(false) }
 
     ModalBottomSheet(
@@ -71,7 +71,7 @@ fun CreateTaskSheet(
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                TaskCategory.entries.take(4).forEach { category ->
+                TaskCategory.entries.forEach { category ->
                     FilterChip(
                         selected = selectedCategory == category,
                         onClick = { selectedCategory = category },

@@ -11,8 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.davinci.app.presentation.theme.DavinciColors
 
@@ -44,9 +46,13 @@ fun AvatarChip(
                 .background(DavinciColors.Primary.copy(alpha = 0.15f)),
             contentAlignment = Alignment.Center,
         ) {
+            val fontSize = if (size <= 24.dp) 8.sp else 12.sp
             Text(
                 text = initials.take(3).uppercase(),
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    fontSize = fontSize,
+                    fontWeight = FontWeight.Bold
+                ),
                 color = DavinciColors.Primary,
             )
         }

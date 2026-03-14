@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Shield
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.davinci.app.presentation.screens.home.components.CompletedTasksSection
 import com.davinci.app.presentation.screens.home.components.MarketPulseCard
 import com.davinci.app.presentation.screens.home.components.TimezoneWidget
 import com.davinci.app.presentation.screens.home.components.UrgentTasksSection
@@ -372,6 +373,22 @@ fun HomeScreen(
             }
         }
         
+        // ─── Completed Tasks Header ─────────────────────────────────
+        Spacer(modifier = Modifier.height(32.dp))
+        
+        Text(
+            text = "COMPLETED TASKS",
+            style = MaterialTheme.typography.labelMedium,
+            color = DavinciColors.TextMuted,
+            modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+            letterSpacing = 1.sp,
+            fontWeight = FontWeight.Bold
+        )
+        
+        HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
+        
+        CompletedTasksSection()
+
         // Extra large spacer at bottom so content doesn't get stuck behind Bottom Nav
         Spacer(modifier = Modifier.height(100.dp))
     }

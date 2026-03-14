@@ -21,21 +21,21 @@ fun UrgentTasksSection(modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         UrgentTaskRow(
             title = "Approve Q4 Budget Transfer",
-            subtitle = "Due in 2 hrs",
+            subtitle = "Due in 2 hrs • Finances",
             subtitleColor = DavinciColors.Error,
             avatarInitials = "NKC"
         )
         HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
         UrgentTaskRow(
             title = "Call Contractor regarding roof",
-            subtitle = "Home Maint.",
+            subtitle = "Purchases",
             subtitleColor = DavinciColors.TextMuted,
             avatarInitials = "ME"
         )
         HorizontalDivider(color = DavinciColors.Divider, thickness = 0.5.dp)
         UrgentTaskRow(
             title = "Review Mom's Visa Application",
-            subtitle = "Admin",
+            subtitle = "Personal",
             subtitleColor = DavinciColors.TextMuted,
             avatarInitials = "NKC"
         )

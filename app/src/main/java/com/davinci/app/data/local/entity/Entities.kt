@@ -24,7 +24,7 @@ data class TaskEntity(
         id = id,
         title = title,
         notes = notes,
-        category = TaskCategory.entries.find { it.name == category.uppercase() } ?: TaskCategory.ADMIN,
+        category = TaskCategory.entries.find { it.name == category.uppercase() } ?: TaskCategory.PERSONAL,
         assignedTo = assignedTo,
         assignedToName = assignedToName,
         assignedToAvatar = assignedToAvatar,

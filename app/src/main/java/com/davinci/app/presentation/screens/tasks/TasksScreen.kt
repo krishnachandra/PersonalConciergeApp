@@ -8,11 +8,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowDownward
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Sort
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.davinci.app.domain.model.TaskStatus
@@ -89,6 +94,17 @@ fun TasksScreen(
                 modifier = Modifier.padding(horizontal = 24.dp),
             )
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ─── Sort Section ────────────────────────────
+            SortSection(
+                currentSortType = uiState.sortType,
+                currentSortOrder = uiState.sortOrder,
+                onSortTypeChanged = { viewModel.updateSort(it) },
+                onSortOrderChanged = { viewModel.updateSortOrder(it) },
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+
             Spacer(modifier = Modifier.height(8.dp))
 
             // ─── Task List ───────────────────────────────
@@ -102,6 +118,7 @@ fun TasksScreen(
                     TaskRow(
                         task = task,
                         onToggle = { viewModel.toggleTask(task.id) },
+                        showCategory = false,
                         modifier = Modifier.animateItem(),
                     )
                     HorizontalDivider(
@@ -111,29 +128,47 @@ fun TasksScreen(
                     )
                 }
 
-                // Completed section
-                val completedTasks = uiState.tasks.filter { it.status == TaskStatus.COMPLETED }
-                if (completedTasks.isNotEmpty()) {
-                    item {
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Text(
-                            text = "COMPLETED",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = DavinciColors.TextMuted,
-                            modifier = Modifier.padding(horizontal = 24.dp),
-                            letterSpacing = androidx.compose.ui.unit.TextUnit(
-                                1.5f,
-                                androidx.compose.ui.unit.TextUnitType.Sp
-                            ),
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
+                // Completed section header
+                item {
+                    Spacer(modifier = Modifier.height(32.dp))
+                    Text(
+                        text = "COMPLETED",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = DavinciColors.TextMuted,
+                        modifier = Modifier.padding(horizontal = 24.dp),
+                        letterSpacing = androidx.compose.ui.unit.TextUnit(
+                            1.5f,
+                            androidx.compose.ui.unit.TextUnitType.Sp
+                        ),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    HorizontalDivider(
+                        color = DavinciColors.Divider,
+                        thickness = 0.5.dp,
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
+                val completedTasks = uiState.tasks.filter { it.status == TaskStatus.COMPLETED }
+                if (completedTasks.isEmpty()) {
+                    item {
+                        Text(
+                            text = "No completed tasks yet",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = DavinciColors.TextMuted,
+                            modifier = Modifier.padding(horizontal = 24.dp, vertical = 16.dp),
+                            fontStyle = FontStyle.Italic
+                        )
+                    }
+                } else {
                     items(completedTasks, key = { it.id }) { task ->
                         TaskRow(
                             task = task,
                             onToggle = { viewModel.toggleTask(task.id) },
                             isCompleted = true,
+                            showCategory = false,
                             modifier = Modifier.animateItem(),
                         )
                     }
@@ -169,5 +204,71 @@ fun TasksScreen(
                 showCreateSheet = false
             },
         )
+    }
+}
+@Composable
+fun SortSection(
+    currentSortType: SortType,
+    currentSortOrder: SortOrder,
+    onSortTypeChanged: (SortType) -> Unit,
+    onSortOrderChanged: (SortOrder) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Default.Sort,
+            contentDescription = null,
+            tint = DavinciColors.TextMuted,
+            modifier = Modifier.size(18.dp)
+        )
+        
+        Text(
+            text = "Sort by:",
+            style = MaterialTheme.typography.labelMedium,
+            color = DavinciColors.TextMuted
+        )
+
+        FilterChip(
+            selected = currentSortType == SortType.CREATION_DATE,
+            onClick = { onSortTypeChanged(SortType.CREATION_DATE) },
+            label = { Text("Date") },
+            colors = FilterChipDefaults.filterChipColors(
+                selectedContainerColor = DavinciColors.Primary.copy(alpha = 0.1f),
+                selectedLabelColor = DavinciColors.Primary
+            ),
+            border = null
+        )
+
+        FilterChip(
+            selected = currentSortType == SortType.ETA,
+            onClick = { onSortTypeChanged(SortType.ETA) },
+            label = { Text("ETA") },
+            colors = FilterChipDefaults.filterChipColors(
+                selectedContainerColor = DavinciColors.Primary.copy(alpha = 0.1f),
+                selectedLabelColor = DavinciColors.Primary
+            ),
+            border = null
+        )
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        IconButton(
+            onClick = {
+                val nextOrder = if (currentSortOrder == SortOrder.ASCENDING) SortOrder.DESCENDING else SortOrder.ASCENDING
+                onSortOrderChanged(nextOrder)
+            },
+            modifier = Modifier.size(32.dp)
+        ) {
+            Icon(
+                imageVector = if (currentSortOrder == SortOrder.ASCENDING) Icons.Default.ArrowUpward else Icons.Default.ArrowDownward,
+                contentDescription = "Toggle Sort Order",
+                tint = DavinciColors.Primary,
+                modifier = Modifier.size(20.dp)
+            )
+        }
     }
 }

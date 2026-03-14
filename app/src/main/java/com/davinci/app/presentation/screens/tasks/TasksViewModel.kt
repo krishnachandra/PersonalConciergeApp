@@ -9,10 +9,15 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+enum class SortType { CREATION_DATE, ETA }
+enum class SortOrder { ASCENDING, DESCENDING }
+
 data class TasksUiState(
     val tasks: List<Task> = emptyList(),
-    val categories: List<String> = listOf("All", "Mine", "Admin", "Groceries", "Finance"),
-    val selectedCategory: String = "All",
+    val categories: List<String> = listOf("Personal", "Purchases", "Finances"),
+    val selectedCategory: String = "Personal",
+    val sortType: SortType = SortType.CREATION_DATE,
+    val sortOrder: SortOrder = SortOrder.DESCENDING,
     val isLoading: Boolean = true,
 )
 
@@ -21,27 +26,60 @@ class TasksViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(TasksUiState())
+    private val _uiState = MutableStateFlow(TasksUiState(
+        categories = listOf("Personal", "Purchases", "Finances")
+    ))
     val uiState: StateFlow<TasksUiState> = _uiState.asStateFlow()
 
-    private val selectedCategory = MutableStateFlow("All")
+    private val selectedCategory = MutableStateFlow("Personal")
+    private val sortType = MutableStateFlow(SortType.CREATION_DATE)
+    private val sortOrder = MutableStateFlow(SortOrder.DESCENDING)
 
     init {
         viewModelScope.launch {
-            selectedCategory.flatMapLatest { category ->
+            combine(selectedCategory, sortType, sortOrder) { category, type, order ->
+                Triple(category, type, order)
+            }.flatMapLatest { (category, type, order) ->
                 val taskCategory = when (category) {
-                    "Admin" -> TaskCategory.ADMIN
-                    "Groceries" -> TaskCategory.GROCERIES
-                    "Finance" -> TaskCategory.FINANCE
+                    "Personal" -> TaskCategory.PERSONAL
+                    "Purchases" -> TaskCategory.PURCHASES
+                    "Finances" -> TaskCategory.FINANCES
                     else -> null
                 }
-                taskRepository.getTasks(category = taskCategory)
-            }.collect { tasks ->
+                
+                taskRepository.getTasks(category = taskCategory).map { tasks ->
+                    val filteredTasks = tasks // Categories filtered via Repository
+                    sortTasks(filteredTasks, type, order)
+                }
+            }.collect { sortedTasks ->
                 _uiState.update {
-                    it.copy(tasks = tasks, isLoading = false)
+                    it.copy(tasks = sortedTasks, isLoading = false)
                 }
             }
         }
+    }
+
+    private fun sortTasks(tasks: List<Task>, type: SortType, order: SortOrder): List<Task> {
+        return when (type) {
+            SortType.CREATION_DATE -> {
+                if (order == SortOrder.ASCENDING) tasks.sortedBy { it.createdAt }
+                else tasks.sortedByDescending { it.createdAt }
+            }
+            SortType.ETA -> {
+                if (order == SortOrder.ASCENDING) tasks.sortedBy { it.dueDate ?: java.time.Instant.MAX }
+                else tasks.sortedByDescending { it.dueDate ?: java.time.Instant.MIN }
+            }
+        }
+    }
+
+    fun updateSort(type: SortType) {
+        sortType.value = type
+        _uiState.update { it.copy(sortType = type) }
+    }
+
+    fun updateSortOrder(order: SortOrder) {
+        sortOrder.value = order
+        _uiState.update { it.copy(sortOrder = order) }
     }
 
     fun selectCategory(category: String) {

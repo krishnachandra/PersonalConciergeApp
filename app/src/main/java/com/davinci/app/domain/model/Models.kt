@@ -23,12 +23,9 @@ data class Task(
 )
 
 enum class TaskCategory(val label: String) {
-    ADMIN("Admin"),
-    GROCERIES("Groceries"),
-    FINANCE("Finance"),
-    TRAVEL("Travel"),
-    HOME("Home"),
-    FAMILY("Family"),
+    PERSONAL("Personal"),
+    PURCHASES("Purchases"),
+    FINANCES("Finances"),
 }
 
 enum class TaskStatus {
