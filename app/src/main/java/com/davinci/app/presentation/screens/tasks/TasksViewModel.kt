@@ -98,6 +98,7 @@ class TasksViewModel @Inject constructor(
         category: TaskCategory,
         assignee: String?,
         isUrgent: Boolean,
+        dueDate: java.time.Instant? = null,
     ) {
         viewModelScope.launch {
             taskRepository.createTask(
@@ -105,6 +106,7 @@ class TasksViewModel @Inject constructor(
                 category = category,
                 assignedTo = assignee,
                 isUrgent = isUrgent,
+                dueDate = dueDate,
             )
         }
     }

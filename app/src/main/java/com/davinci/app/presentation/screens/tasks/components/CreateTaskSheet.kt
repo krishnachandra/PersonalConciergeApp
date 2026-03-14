@@ -7,10 +7,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.davinci.app.domain.model.TaskCategory
 import com.davinci.app.presentation.components.AvatarChip
 import com.davinci.app.presentation.theme.DavinciColors
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Bottom sheet for creating a new task.
@@ -20,12 +23,19 @@ import com.davinci.app.presentation.theme.DavinciColors
 @Composable
 fun CreateTaskSheet(
     onDismiss: () -> Unit,
-    onCreateTask: (String, TaskCategory, String?, Boolean) -> Unit,
+    onCreateTask: (String, TaskCategory, String?, Boolean, java.time.Instant?) -> Unit,
 ) {
     var title by remember { mutableStateOf("") }
     var selectedCategory by remember { mutableStateOf(TaskCategory.PERSONAL) }
-    var isUrgent by remember { mutableStateOf(false) }
+    var isUrgent by remember { mutableStateOf(true) }
     var selectedUsers by remember { mutableStateOf(setOf<String>()) }
+    
+    var showDatePicker by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+    val dateFormatter = remember { SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()) }
+    val selectedDateText = datePickerState.selectedDateMillis?.let {
+        dateFormatter.format(Date(it))
+    } ?: "Select date"
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -106,7 +116,10 @@ fun CreateTaskSheet(
                 )
                 Switch(
                     checked = isUrgent,
-                    onCheckedChange = { isUrgent = it },
+                    onCheckedChange = { 
+                        isUrgent = it 
+                        if (!it) showDatePicker = true
+                    },
                     colors = SwitchDefaults.colors(
                         checkedThumbColor = DavinciColors.TextOnPrimary,
                         checkedTrackColor = DavinciColors.Primary,
@@ -114,6 +127,30 @@ fun CreateTaskSheet(
                         uncheckedTrackColor = DavinciColors.SurfaceVariant,
                     ),
                 )
+            }
+
+            if (!isUrgent) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showDatePicker = true }
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Due Date",
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = DavinciColors.TextPrimary,
+                    )
+                    Text(
+                        text = selectedDateText,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = DavinciColors.Primary,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -154,7 +191,10 @@ fun CreateTaskSheet(
             Button(
                 onClick = {
                     if (title.isNotBlank()) {
-                        onCreateTask(title, selectedCategory, null, isUrgent)
+                        val dueDate = if (!isUrgent) {
+                            datePickerState.selectedDateMillis?.let { java.time.Instant.ofEpochMilli(it) }
+                        } else null
+                        onCreateTask(title, selectedCategory, null, isUrgent, dueDate)
                     }
                 },
                 modifier = Modifier
@@ -169,6 +209,44 @@ fun CreateTaskSheet(
             ) {
                 Text("Create Task", style = MaterialTheme.typography.labelLarge)
             }
+        }
+    }
+
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("OK", color = DavinciColors.Primary)
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel", color = DavinciColors.TextMuted)
+                }
+            },
+            colors = DatePickerDefaults.colors(
+                containerColor = DavinciColors.Surface
+            )
+        ) {
+            DatePicker(
+                state = datePickerState,
+                colors = DatePickerDefaults.colors(
+                    titleContentColor = DavinciColors.TextPrimary,
+                    headlineContentColor = DavinciColors.TextPrimary,
+                    weekdayContentColor = DavinciColors.TextMuted,
+                    subheadContentColor = DavinciColors.TextMuted,
+                    yearContentColor = DavinciColors.TextPrimary,
+                    currentYearContentColor = DavinciColors.Primary,
+                    selectedYearContentColor = DavinciColors.TextOnPrimary,
+                    selectedYearContainerColor = DavinciColors.Primary,
+                    dayContentColor = DavinciColors.TextPrimary,
+                    selectedDayContainerColor = DavinciColors.Primary,
+                    selectedDayContentColor = DavinciColors.TextOnPrimary,
+                    todayContentColor = DavinciColors.Primary,
+                    todayDateBorderColor = DavinciColors.Primary
+                )
+            )
         }
     }
 }

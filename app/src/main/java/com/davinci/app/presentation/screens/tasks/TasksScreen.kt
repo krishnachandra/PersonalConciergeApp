@@ -199,8 +199,8 @@ fun TasksScreen(
     if (showCreateSheet) {
         CreateTaskSheet(
             onDismiss = { showCreateSheet = false },
-            onCreateTask = { title, category, assignee, isUrgent ->
-                viewModel.createTask(title, category, assignee, isUrgent)
+            onCreateTask = { title, category, assignee, isUrgent, dueDate ->
+                viewModel.createTask(title, category, assignee, isUrgent, dueDate)
                 showCreateSheet = false
             },
         )
