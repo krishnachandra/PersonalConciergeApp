@@ -19,6 +19,7 @@ data class TaskEntity(
     val dueDate: Long? = null,
     val completedAt: Long? = null,
     val createdAt: Long = System.currentTimeMillis(),
+    val sharedWith: String? = null,
 ) {
     fun toDomain() = Task(
         id = id,
@@ -34,6 +35,7 @@ data class TaskEntity(
         dueDate = dueDate?.let { java.time.Instant.ofEpochMilli(it) },
         completedAt = completedAt?.let { java.time.Instant.ofEpochMilli(it) },
         createdAt = java.time.Instant.ofEpochMilli(createdAt),
+        sharedWith = sharedWith?.split(",")?.filter { it.isNotBlank() } ?: emptyList(),
     )
 
     companion object {
@@ -51,6 +53,7 @@ data class TaskEntity(
             dueDate = task.dueDate?.toEpochMilli(),
             completedAt = task.completedAt?.toEpochMilli(),
             createdAt = task.createdAt.toEpochMilli(),
+            sharedWith = if (task.sharedWith.isEmpty()) null else task.sharedWith.joinToString(","),
         )
     }
 }

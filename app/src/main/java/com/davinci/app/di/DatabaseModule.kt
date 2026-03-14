@@ -23,7 +23,10 @@ object DatabaseModule {
             context,
             DavinciDatabase::class.java,
             "davinci_db"
-        ).fallbackToDestructiveMigration().build()
+        )
+        .addCallback(DavinciDatabase.CALLBACK)
+        .fallbackToDestructiveMigration()
+        .build()
     }
 
     @Provides

@@ -20,6 +20,7 @@ data class Task(
     val dueDate: Instant? = null,
     val completedAt: Instant? = null,
     val createdAt: Instant = Instant.now(),
+    val sharedWith: List<String> = emptyList(),
 )
 
 enum class TaskCategory(val label: String) {

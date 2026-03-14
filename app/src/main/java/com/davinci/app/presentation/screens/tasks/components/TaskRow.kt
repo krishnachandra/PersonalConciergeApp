@@ -100,15 +100,18 @@ fun TaskRow(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                Icon(
-                    imageVector = Icons.Outlined.Visibility,
-                    contentDescription = null,
-                    modifier = Modifier.size(14.dp),
-                    tint = DavinciColors.TextMuted
-                )
-                
-                AvatarChip(initials = "NPS", size = 20.dp)
-                AvatarChip(initials = "JPL", size = 20.dp)
+                if (task.sharedWith.isNotEmpty()) {
+                    Icon(
+                        imageVector = Icons.Outlined.Visibility,
+                        contentDescription = null,
+                        modifier = Modifier.size(14.dp),
+                        tint = DavinciColors.TextMuted
+                    )
+                    
+                    task.sharedWith.forEach { initials ->
+                        AvatarChip(initials = initials, size = 20.dp)
+                    }
+                }
 
                 if (showCategory) {
                     Spacer(modifier = Modifier.width(8.dp))
