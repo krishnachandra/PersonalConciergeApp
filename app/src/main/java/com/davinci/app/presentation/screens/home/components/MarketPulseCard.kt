@@ -45,8 +45,8 @@ fun MarketPulseCard(
 
             val goldPositive = goldChange.contains("+")
             Text(
-                text = "↗ $goldChange",
-                style = MaterialTheme.typography.bodySmall,
+                text = if(goldPositive) "↑ $goldChange" else "↓ $goldChange",
+                style = MaterialTheme.typography.bodyMedium,
                 color = if (goldPositive) DavinciColors.Positive else DavinciColors.Negative,
             )
         }
@@ -77,8 +77,8 @@ fun MarketPulseCard(
 
             val silverPositive = silverChange.contains("+")
             Text(
-                text = "↘ $silverChange",
-                style = MaterialTheme.typography.bodySmall,
+                text = if(silverPositive) "↑ $silverChange" else "↓ $silverChange",
+                style = MaterialTheme.typography.bodyMedium,
                 color = if (silverPositive) DavinciColors.Positive else DavinciColors.Negative,
             )
         }

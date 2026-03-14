@@ -22,7 +22,7 @@ sealed class Screen(
 ) {
     data object Home : Screen(
         route = "home",
-        label = "Briefing",
+        label = "Home",
         icon = Icons.Outlined.Dashboard,
         selectedIcon = Icons.Filled.Dashboard,
     )

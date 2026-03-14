@@ -11,7 +11,7 @@
     <string name="has_account">Already have an account?</string>
 
     <!-- Navigation -->
-    <string name="nav_briefing">Briefing</string>
+    <string name="nav_briefing">Home</string>
     <string name="nav_tasks">Tasks</string>
     <string name="nav_wealth">Wealth</string>
     <string name="nav_settings">Settings</string>
