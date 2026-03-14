@@ -62,7 +62,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Family Concierge",
+            text = "The All-in-One Family App",
             style = MaterialTheme.typography.bodyLarge,
             color = DavinciColors.Primary,
             fontWeight = FontWeight.Medium,

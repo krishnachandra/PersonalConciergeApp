@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Davinci</string>
     <string name="login_title">Davinci</string>
-    <string name="login_subtitle">Family Concierge</string>
+    <string name="login_subtitle">The All-in-One Family App</string>
     <string name="sign_in">Sign In</string>
     <string name="sign_up">Sign Up</string>
     <string name="email_hint">Email</string>
