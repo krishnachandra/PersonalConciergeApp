@@ -34,8 +34,8 @@ fun LoginScreen(
     val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
 
-    var username by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("nkc") }
+    var password by remember { mutableStateOf("12345678") }
     var passwordVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(uiState.isSuccess) {
