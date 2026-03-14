@@ -14,8 +14,8 @@ enum class SortOrder { ASCENDING, DESCENDING }
 
 data class TasksUiState(
     val tasks: List<Task> = emptyList(),
-    val categories: List<String> = listOf("Personal", "Purchases", "Finances"),
-    val selectedCategory: String = "Personal",
+    val categories: List<String> = listOf("All", "Personal", "Purchases", "Finances"),
+    val selectedCategory: String = "All",
     val sortType: SortType = SortType.CREATION_DATE,
     val sortOrder: SortOrder = SortOrder.DESCENDING,
     val isLoading: Boolean = true,
@@ -27,11 +27,11 @@ class TasksViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(TasksUiState(
-        categories = listOf("Personal", "Purchases", "Finances")
+        categories = listOf("All", "Personal", "Purchases", "Finances")
     ))
     val uiState: StateFlow<TasksUiState> = _uiState.asStateFlow()
 
-    private val selectedCategory = MutableStateFlow("Personal")
+    private val selectedCategory = MutableStateFlow("All")
     private val sortType = MutableStateFlow(SortType.CREATION_DATE)
     private val sortOrder = MutableStateFlow(SortOrder.DESCENDING)
 

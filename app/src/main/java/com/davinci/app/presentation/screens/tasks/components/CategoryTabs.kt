@@ -19,7 +19,7 @@ import com.davinci.app.presentation.theme.DavinciColors
 
 /**
  * Horizontal scrolling category tabs.
- * Matches wireframe: Personal | Purchases | Finances
+ * Matches wireframe: All | Personal | Purchases | Finances
  * Active tab has teal text + underline indicator.
  */
 @Composable

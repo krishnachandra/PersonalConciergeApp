@@ -118,7 +118,7 @@ fun TasksScreen(
                     TaskRow(
                         task = task,
                         onToggle = { viewModel.toggleTask(task.id) },
-                        showCategory = false,
+                        showCategory = uiState.selectedCategory == "All",
                         modifier = Modifier.animateItem(),
                     )
                     HorizontalDivider(
@@ -168,7 +168,7 @@ fun TasksScreen(
                             task = task,
                             onToggle = { viewModel.toggleTask(task.id) },
                             isCompleted = true,
-                            showCategory = false,
+                            showCategory = uiState.selectedCategory == "All",
                             modifier = Modifier.animateItem(),
                         )
                     }
